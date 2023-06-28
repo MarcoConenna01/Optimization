@@ -4,7 +4,7 @@ clear vars
 %% FIXED VARIABLES
 
 Pa = 101325; %ambient pressure in Pa
-Pc = 10e5; %chamber pressure in Pa
+Pc = 10e5; %chamber pressure in Pa ok
 Tc = 3000; %K
 Dc = 0.5; %in m
 Ln = 0.8;
