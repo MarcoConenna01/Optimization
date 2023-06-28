@@ -36,7 +36,7 @@ g6 = zeros(length(eps),length(Ln));
 for i=1:length(eps)
     for j=1:length(Ln)
 
-        [A_e(i,j), U_e(i,j), m_dot(i,j), alpha(i,j), Thrust(i,j), Mass(i,j)] = Thrust_Mass(eps(i),Ln(j));
+        [A_e(i,j), U_e(i,j), m_dot(i,j), alpha(i,j), p_c(i,j),Thrust(i,j), Mass(i,j)] = Thrust_Mass(eps(i),Ln(j));
         [g Ceq] = simp_constraints([eps(i) Ln(j)]);
         g1(i,j) = g(1); %thickness
         g2(i,j) = g(2); %alpha min

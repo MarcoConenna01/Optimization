@@ -1,12 +1,13 @@
-function [A_e, U_e, m_dot, alpha, Thrust, Mass] = Thrust_Mass(eps, Ln)
+function [A_e, U_e, m_dot, alpha,p_c Thrust, Mass] = Thrust_Mass(eps, Ln)
 
-        Parameters
+        Parameters;
         
+        gamma=1.12;
         p_ratio=Expansion(eps,GAMMA,gamma); %pressure ratio
         p_c=p_e./p_ratio;
         
         Ra=R./M;
-        U_e=sqrt(2*(gamma./(gamma-1)).*Ra.*Tc.*(1-r.^((gamma-1)./gamma)));
+        U_e=sqrt(2*(gamma/(gamma-1)).*Ra.*Tc.*(1-p_ratio.^((gamma-1)/gamma)));
 
         A_e=eps.*A_t;
         
