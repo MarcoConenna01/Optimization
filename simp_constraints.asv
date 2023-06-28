@@ -1,0 +1,11 @@
+function [g]=constraints(p_c,Dc,j,sigma,alpha)
+
+%thickness
+thick=p_c.*Dc*j/(2*sigma); %max thickness depends on sigma
+g(1)=thick;
+%alpha
+g(2)=alpha; %[10°-25°] half divergence angle
+%reynolds
+
+
+end

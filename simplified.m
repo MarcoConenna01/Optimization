@@ -71,7 +71,8 @@ for i=1:length(eps)
         m_dot(i,j)=m_flow_rate(p_c(i,j),A_t,GAMMA,R,Tc);
         tg_a(i,j)=(D_e(i,j)-D_t)./(2*Ln(j));
         alpha(i,j)=atan(tg_a(i,j));
-       
+        
+        t(i,j)=p_c(i,j)*Dc*j/(2*sigma);
         Thrust(i,j)=(1+cos(alpha(i,j)))./2.*(m_dot(i,j).*U_e(i,j)+(p_e-Pa).*A_e(i,j));
         Mass(i,j)=k_loads*(rho_mat/sigma)*j.*p_c(i,j).*(k_cyl*Vc+A_t.*(eps(i)-1)./sin(alpha(i,j)).*(Dc/2));
     end
@@ -80,7 +81,7 @@ w=1;
 Thrust_norm=Thrust./(max(Thrust,[],"all"));
 Mass_norm=Mass./(max(Mass,[],"all"));
 f_obj1=Mass_norm-w.*Thrust_norm;
-f_obj2=Mass_norm./(Thrust_norm);
+%f_obj2=Mass_norm./(Thrust_norm);
 %figure()
 %plot(p_c,Mass)
 surf(Mass)
@@ -94,10 +95,8 @@ figure()
 %plot(p_c,Mass./Thrust)
 surf(f_obj1)
 title('fobj sottraz')
-surf(f_obj2)
-title('fobj div')
-%figure()
-%plot(p_ratio,U_e)
+figure()
+contour(f_obj1)
 
 
 
@@ -111,7 +110,7 @@ function p_ratio = expansion(eps,GAMMA,gamma)
 
 zero = @(x) abs(eps - GAMMA/(sqrt((2*gamma/(gamma-1))*x^(2/gamma)*(1-x^((gamma-1)/gamma)))));
 options = optimoptions("fmincon","Algorithm","sqp");
-p_ratio = fmincon(zero,4,[],[],[],[],1,100,[],options);
+p_ratio = fmincon(zero,0.5,[],[],[],[],0,1,[],options);
 
 end
 
