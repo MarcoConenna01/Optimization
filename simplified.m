@@ -36,7 +36,7 @@ g7 = zeros(length(eps),length(Ln));
 for i = 1:length(eps)
     for j = 1:length(Ln)
 
-        [A_e(i,j), U_e(i,j), m_dot(i,j), alpha(i,j), p_c(i,j),Thrust(i,j), Mass(i,j),t(i,j)] = Thrust_Mass(eps(i),Ln(j));
+        [A_e(i,j), U_e(i,j), m_dot(i,j), alpha(i,j), p_c(i,j),Thrust(i,j), Mass(i,j),t(i,j)] = Thrust_Mass([eps(i) Ln(j)]);
         [g, Ceq] = simp_constraints([eps(i) Ln(j)]);
         g1(i,j) = g(1); %thickness max
         g2(i,j) = g(2); %thickness min
@@ -73,3 +73,20 @@ contour(Ln,eps,g6,[0 0],'k',LineWidth=2); %mass
 hold on
 contour(Ln,eps,g7,[0 0],'k--',LineWidth=2); %thrust
 grid on
+
+%% optimization
+clc
+% Define the objective function
+objective = @(x) Objective_function(x,max(Thrust,[],"all"),max(Mass,[],"all"));
+
+% Define the initial guess
+x0 = [40, 0.8];
+
+% Define the nonlinear constraint function
+nonlcon = @(x) simp_constraints(x);
+
+% Define the optimization options
+options = optimoptions('fmincon', 'Display', 'iter', 'Algorithm', 'sqp', 'TolX', 1e-8, 'TolCon', 1e-8);
+
+% Run the optimization
+[x_opt, f_opt] = fmincon(objective, x0, [], [], [], [], [], [], nonlcon, options);

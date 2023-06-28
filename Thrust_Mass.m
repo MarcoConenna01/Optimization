@@ -1,5 +1,7 @@
-function [A_e, U_e, m_dot, alpha,p_c, Thrust, Mass,t] = Thrust_Mass(eps, Ln)
+function [A_e, U_e, m_dot, alpha,p_c, Thrust, Mass,t] = Thrust_Mass(x)
 
+        eps = x(1);
+        Ln = x(2);
         Parameters;
         
         gamma=1.12;

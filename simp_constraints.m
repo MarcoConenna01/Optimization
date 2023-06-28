@@ -5,7 +5,7 @@ Ln = x(2);
 
 Parameters;
 
-[A_e, U_e, m_dot, alpha,p_c Thrust, Mass] = Thrust_Mass(eps,Ln);
+[A_e, U_e, m_dot, alpha,p_c Thrust, Mass] = Thrust_Mass([eps,Ln]);
 
 amin = 10*2*pi/360;
 amax = 25*2*pi/360;
