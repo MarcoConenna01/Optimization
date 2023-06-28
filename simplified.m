@@ -12,19 +12,17 @@ Tc=800; %Temperature in the chamber [K]
 k_loads=1; %safety factor for the mass of the engine
 j=1.1;
 rho_mat=8980; %density of the material of the engine Haynes 188 [kg/m^3]
-sigma=7480; %ultimate tensile strength of material at 538°C, [bar]
+sigma=7480e5; %ultimate tensile strength of material at 538°C, [bar]
 Dc=0.5; %diameter of the chamber [m]
 k_cyl=0; %initialized value for safety factor for cylindric shape, then updated depending on geometry 
 Lc=0.5; %length of the chamber [m]
-Pa=1.01325; %ambient pressure [bar]
+Pa=101325; %ambient pressure [Pa]
 %hydrazine gamma=1.25, M=32,0452g/mol
 %gamma=linspace(1.15,1.30,100);
 gamma=1.25;
 GAMMA = sqrt(gamma).*(2./(gamma+1)).^((gamma+1)./(2.*(gamma-1)));
 M=32.0452;
 R=8314.5;
-
-
 
 Vc=pi/4.*(Dc)^2.*Lc; %chamber volume
 
@@ -49,6 +47,11 @@ tg_a=zeros(length(eps),length(Ln));
 alpha=zeros(length(eps),length(Ln));
 Thrust=zeros(length(eps),length(Ln));
 Mass=zeros(length(eps),length(Ln));
+Mass=zeros(length(eps),length(Ln));
+t = zeros(length(eps),length(Ln));
+g1 = zeros(length(eps),length(Ln));
+g2 = zeros(length(eps),length(Ln));
+g3 = zeros(length(eps),length(Ln));
 
 for i=1:length(eps)
 p_ratio(i,:)=expansion(eps(i),GAMMA,gamma); %pressure ratio
@@ -60,8 +63,6 @@ end
 for i=1:length(eps)
     for j=1:length(Ln)
 
-
-
         A_e(i,j)=eps(i).*A_t;
         
         D_e(i,j)=sqrt(4/pi.*A_e(i,j));
@@ -71,32 +72,52 @@ for i=1:length(eps)
         m_dot(i,j)=m_flow_rate(p_c(i,j),A_t,GAMMA,R,Tc);
         tg_a(i,j)=(D_e(i,j)-D_t)./(2*Ln(j));
         alpha(i,j)=atan(tg_a(i,j));
-        
         t(i,j)=p_c(i,j)*Dc*j/(2*sigma);
+        
+        g = simp_constraints(p_c(i,j),Dc,j,sigma,alpha(i,j),Tc,D_t,A_t,m_dot(i,j));
+        g1(i,j) = g(1);
+        g2(i,j) = g(2);
+        g3(i,j) = g(3);
+
         Thrust(i,j)=(1+cos(alpha(i,j)))./2.*(m_dot(i,j).*U_e(i,j)+(p_e-Pa).*A_e(i,j));
         Mass(i,j)=k_loads*(rho_mat/sigma)*j.*p_c(i,j).*(k_cyl*Vc+A_t.*(eps(i)-1)./sin(alpha(i,j)).*(Dc/2));
     end
 end
-w=1;
+
 Thrust_norm=Thrust./(max(Thrust,[],"all"));
 Mass_norm=Mass./(max(Mass,[],"all"));
-f_obj1=Mass_norm-w.*Thrust_norm;
-%f_obj2=Mass_norm./(Thrust_norm);
-%figure()
-%plot(p_c,Mass)
-surf(Mass)
-title('mass')
+f_obj1=Mass_norm-Thrust_norm;
+
+% surf(Mass)
+% title('mass')
+% 
+% figure()
+% surf(Thrust)
+% title('Thrust')
+% 
+% figure()
+% surf(f_obj1)
+% title('fobj sottraz')
+
+
+tmin = 0.001;
+tmax = 0.01;
+amin = 10*2*pi/360;
+amax = 25*2*pi/360;
+Remin = 100000;
+
 figure()
-%plot(p_c,Thrust,'r',p_c,Mass./1e02,'b')
-surf(Thrust)
-title('Thrust')
-%legend('thrust','mass')
-figure()
-%plot(p_c,Mass./Thrust)
-surf(f_obj1)
-title('fobj sottraz')
-figure()
-contour(f_obj1)
+contour(Ln,eps,f_obj1)
+hold on
+% contour(Ln,eps,g1,[tmin tmin],'k--',LineWidth=2);
+% hold on
+% contour(Ln,eps,g1,[tmax tmax],'k--',LineWidth=2);
+hold on
+contour(Ln,eps,g2-amin,[0 0],'r--',LineWidth=2);
+hold on
+contour(Ln,eps,g2-amax,[0 0],'r--',LineWidth=2);
+hold on
+contour(Ln,eps,g3-Remin,[0 0],'b--',LineWidth=2);
 
 
 
