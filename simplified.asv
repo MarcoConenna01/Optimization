@@ -1,4 +1,4 @@
-%%Simplified Model%%
+% %%Simplified Model%%
 %design variables: wall thickness t, expansion ratio eps=Ae/At
 %function to optimize = Mass/Thrust ratio
 %constraints: ...
@@ -10,7 +10,7 @@ clc
 %% Fixed parameters
 Tc=800; %Temperature in the chamber [K]
 k_loads=1; %safety factor for the mass of the engine
-j=1.1;
+j=1;
 rho_mat=8980; %density of the material of the engine Haynes 188 [kg/m^3]
 sigma=7480e5; %ultimate tensile strength of material at 538°C, [bar]
 Dc=0.5; %diameter of the chamber [m]
@@ -19,9 +19,13 @@ Lc=0.5; %length of the chamber [m]
 Pa=101325; %ambient pressure [Pa]
 %hydrazine gamma=1.25, M=32,0452g/mol
 %gamma=linspace(1.15,1.30,100);
-gamma=1.25;
+O_F=5.5;
+M_o=32; %g/mol
+M_f=2;
+O_F_mol=O_F*(M_o/M_f);
+M=(M_o*88+M_f*1)./89;
+gamma=1.12;
 GAMMA = sqrt(gamma).*(2./(gamma+1)).^((gamma+1)./(2.*(gamma-1)));
-M=32.0452;
 R=8314.5;
 
 Vc=pi/4.*(Dc)^2.*Lc; %chamber volume
@@ -70,6 +74,7 @@ for i=1:length(eps)
         U_e(i,j)=ex_vel(gamma,R,M,Tc,p_ratio(i,j));
         
         m_dot(i,j)=m_flow_rate(p_c(i,j),A_t,GAMMA,R,Tc);
+        
         tg_a(i,j)=(D_e(i,j)-D_t)./(2*Ln(j));
         alpha(i,j)=atan(tg_a(i,j));
         t(i,j)=p_c(i,j)*Dc*j/(2*sigma);
@@ -107,19 +112,20 @@ amax = 25*2*pi/360;
 Remin = 100000;
 
 figure()
-contour(f_obj1)
-xlabel()
-ylabel()
+contour(Ln,eps,f_obj1)
+xlabel('Ln [m]')
+ylabel('expansion ratio')
+grid on
 hold on
 % contour(Ln,eps,g1,[tmin tmin],'k--',LineWidth=2);
 % hold on
 % contour(Ln,eps,g1,[tmax tmax],'k--',LineWidth=2);
-% hold on
-contour(Ln,eps,g2-amin,[0 0],'k--',LineWidth=2);
 hold on
-contour(Ln,eps,g2-amax,[0 0],'k--',LineWidth=2);
-% hold on
-% contour(Ln,eps,g3,[Remin Remin],'k--',LineWidth=2);
+contour(Ln,eps,g2-amin,[0 0],'r--',LineWidth=2);
+hold on
+contour(Ln,eps,g2-amax,[0 0],'r--',LineWidth=2);
+hold on
+contour(Ln,eps,g3-Remin,[0 0],'b--',LineWidth=2);
 
 
 
