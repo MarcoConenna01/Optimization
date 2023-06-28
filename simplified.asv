@@ -9,9 +9,9 @@ clc
 
 Parameters
 
-%% design variables
+%% Design variables
 
-eps=linspace(1,50,100);
+eps=linspace(1.01,50,100);
 Ln=linspace(Dc/2,1,100);
 
 p_ratio=zeros(length(eps),length(Ln));
@@ -36,9 +36,10 @@ g6 = zeros(length(eps),length(Ln));
 for i=1:length(eps)
     for j=1:length(Ln)
 
-        [A_e(i,j), U_e(i,j), m_dot(i,j), alpha(i,j), Thrust(i,j), Mass(i,j)] = Thrust_mass(eps(i),Ln(j));
+        [A_e(i,j), U_e(i,j), m_dot(i,j), alpha(i,j), p_c(i,j),Thrust(i,j), Mass(i,j),t(i,j)] = Thrust_Mass(eps(i),Ln(j));
         [g Ceq] = simp_constraints([eps(i) Ln(j)]);
-        g1(i,j) = g(1); %thickness
+        g1(i,j) = g(1); %thickness max
+        g2(i,j) = g(2); %thickness min
         g2(i,j) = g(2); %alpha min
         g3(i,j) = g(3); %alpha max
         g4(i,j) = g(4); %reynolds
@@ -67,7 +68,7 @@ contour(Ln,eps,g3,[0 0],'r--',LineWidth=2);
 hold on
 contour(Ln,eps,g4,[0 0],'b--',LineWidth=2);
 hold on
-contour(Ln,eps,g5,[0 0],'g*',LineWidth=2);
+contour(Ln,eps,g5,[0 0],'g',LineWidth=2);
 hold on
-contour(Ln,eps,Thrust-thrustmin,[0 0],'g--',LineWidth=2);
+contour(Ln,eps,g6,[0 0],'g--',LineWidth=2);
 

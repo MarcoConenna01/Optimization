@@ -1,4 +1,4 @@
-function [A_e, U_e, m_dot, alpha,p_c Thrust, Mass] = Thrust_Mass(eps, Ln)
+function [A_e, U_e, m_dot, alpha,p_c, Thrust, Mass,t] = Thrust_Mass(eps, Ln)
 
         Parameters;
         
@@ -21,4 +21,5 @@ function [A_e, U_e, m_dot, alpha,p_c Thrust, Mass] = Thrust_Mass(eps, Ln)
         Thrust=(1+cos(alpha))./2.*(m_dot.*U_e+(p_e-Pa).*A_e);
         Mass=k_loads*(rho_mat/sigma)*p_c.*(k_cyl*Vc+A_t.*(eps-1)./sin(alpha).*(Dc/2));
 
+        t = p_c.*Dc/(2*sigma);
 end
