@@ -25,6 +25,3 @@ Vc=pi/4.*(Dc)^2.*Lc; %chamber volume
 p_e=Pa; %adapted nozzle for simplified model (CHANGE WITH CONSTRAINTS FOR COMPLEX MODEL)
 %k_cyl=1/(Lc/Dc)+2;
 k_cyl=1.13;
-
-D_t=0.1; %design variable for complex model
-A_t=pi/4.*(D_t).^2;

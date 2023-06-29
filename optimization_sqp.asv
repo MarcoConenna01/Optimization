@@ -1,0 +1,20 @@
+clear vriables
+clc
+load DATA.mat
+
+%% optimization
+clc
+% Define the objective function
+objective = @(x) Objective_function2(x,max(Thrust,[],"all"),max(Mass,[],"all"));
+
+% Define the initial guess
+x0 = [40, 0.8,0.1];
+
+% Define the nonlinear constraint function
+nonlcon = @(x) simp_constraints2(x);
+
+% Define the optimization options
+options = optimoptions(@fmincon, 'Display', 'iter', 'Algorithm', 'sqp','FiniteDifferenceStepSize',0.0001,'TolX', 1e-3, 'TolCon', 1e-3);
+
+% Run the optimization
+[x_opt, f_opt, exitflag, output] = fmincon(objective, x0, [], [], [], [], [eps(1) Ln(1) D_t(1)], [eps(end) Ln(end) D_t(end)], nonlcon, options);

@@ -1,32 +1,26 @@
-clear vriables
+clear variables
 clc
-openfig("untitled.fig");
-hold on
 load DATA.mat
 
-%% optimization
-clc
 % Define the objective function
-objective = @(x) Objective_function(x,max(Thrust,[],"all"),max(Mass,[],"all"));
+objective = @(x) Objective_function2(x, max(Thrust,[],"all"), max(Mass,[],"all"));
 
 % Define the initial guess
-x0 = [10, 0.8];
+x0 = [30, 0.5, 0.5];
 
 % Define the nonlinear constraint function
-nonlcon = @(x) simp_constraints(x);
+nonlcon = @(x) constraints2(x);
 
 % Define the optimization options
-options = optimoptions(@fmincon, 'Display', 'iter', 'Algorithm', 'sqp','FiniteDifferenceStepSize',0.0001,'TolX', 1e-3, 'TolCon', 1e-3);
+options = optimoptions(@fmincon, 'Display', 'none', 'Algorithm', 'sqp', 'FiniteDifferenceStepSize', 0.01, 'StepTolerance', 1e-12, 'MaxFunctionEvaluations', 100000, 'OutputFcn', @outputFunc);
 
 % Run the optimization
-[x_opt, f_opt, exitflag, output] = fmincon(objective, x0, [], [], [], [], [eps(1) Ln(1)], [eps(end) Ln(end)], nonlcon, options);
-scatter(x_opt(1),x_opt(2))
+[x_opt, f_opt, exitflag, output] = fmincon(objective, x0, [], [], [], [], [eps(1) Ln(1) D_t(1)], [eps(end) Ln(end) D_t(end)], nonlcon, options);
 
-% Display function to show the value of x after each iteration
-function stop = displayFunc(x, optimValues, state)
-    fprintf('Iteration: %d\n', optimValues.iteration);
-    fprintf('x = [%f, %f]\n', x(1), x(2));
-    scatter(x(1),x(2))
-    hold on
+% Output function to print x after each iteration
+function stop = outputFunc(x,optimValues,state)
     stop = false;
+    if isequal(state,'iter')
+        disp(['Current x: ' num2str(x)]);
+    end
 end
