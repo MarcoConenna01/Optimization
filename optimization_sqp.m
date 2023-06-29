@@ -10,7 +10,7 @@ clc
 objective = @(x) Objective_function(x,max(Thrust,[],"all"),max(Mass,[],"all"));
 
 % Define the initial guess
-x0 = [45, 0.5];
+x0 = [30, 0.5];
 
 % Define the nonlinear constraint function
 nonlcon = @(x) simp_constraints(x);

@@ -33,18 +33,20 @@ g6 = zeros(length(eps),length(Ln));
 g7 = zeros(length(eps),length(Ln));
 
 %% Loop cycle
-for i = 1:length(eps)
-    for j = 1:length(Ln)
-
-        [A_e(i,j), U_e(i,j), m_dot(i,j), alpha(i,j), p_c(i,j),Thrust(i,j), Mass(i,j),t(i,j)] = Thrust_Mass([eps(i) Ln(j)]);
-        [g, Ceq] = simp_constraints([eps(i) Ln(j)]);
-        g1(i,j) = g(1); %thickness max
-        g2(i,j) = g(2); %thickness min
-        g3(i,j) = g(3); %alpha min
-        g4(i,j) = g(4); %alpha max 
-        g5(i,j) = g(5); %reynolds
-        g6(i,j) = g(6); %mass 
-        g7(i,j) = g(7); %thrust
+for j = 1:length(Ln)
+    for i = 1:length(eps)
+        
+        x(1) = eps(i);
+        x(2) = Ln(j);
+        [A_e(j,i), U_e(j,i), m_dot(j,i), alpha(j,i), p_c(j,i),Thrust(j,i), Mass(j,i),t(j,i)] = Thrust_Mass(x);
+        [g, Ceq] = simp_constraints(x);
+        g1(j,i) = g(1); %thickness max
+        g2(j,i) = g(2); %thickness min
+        g3(j,i) = g(3); %alpha min
+        g4(j,i) = g(4); %alpha max 
+        g5(j,i) = g(5); %reynolds
+        g6(j,i) = g(6); %mass 
+        g7(j,i) = g(7); %thrust
     end
 end
 
