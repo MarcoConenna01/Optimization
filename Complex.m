@@ -13,25 +13,26 @@ Ln = linspace(Dc/2,1,100);
 D_t = linspace(0.01,0.75*Dc,100); %CONSTRAINT REYNOLDS 100000
 
 %% Initializing Parameters
-p_ratio = zeros(length(eps),length(Ln));
-p_c = zeros(length(eps),length(Ln));
-A_e = zeros(length(eps),length(Ln));
-A_t = zeros(length(eps),length(Ln));
-D_e = zeros(length(eps),length(Ln));
-U_e = zeros(length(eps),length(Ln));
-m_dot = zeros(length(eps),length(Ln));
-tg_a = zeros(length(eps),length(Ln));
-alpha = zeros(length(eps),length(Ln));
-Thrust = zeros(length(eps),length(Ln));
-Mass = zeros(length(eps),length(Ln));
-t = zeros(length(eps),length(Ln));
-g1 = zeros(length(eps),length(Ln));
-g2 = zeros(length(eps),length(Ln));
-g3 = zeros(length(eps),length(Ln));
-g4 = zeros(length(eps),length(Ln));
-g5 = zeros(length(eps),length(Ln));
-g6 = zeros(length(eps),length(Ln));
-g7 = zeros(length(eps),length(Ln));
+p_c = zeros(length(eps),length(Ln),length(D_t));
+A_e = zeros(length(eps),length(Ln),length(D_t));
+A_t = zeros(length(eps),length(Ln),length(D_t));
+D_e = zeros(length(eps),length(Ln),length(D_t));
+U_e = zeros(length(eps),length(Ln),length(D_t));
+m_dot = zeros(length(eps),length(Ln),length(D_t));
+tg_a = zeros(length(eps),length(Ln),length(D_t));
+alpha = zeros(length(eps),length(Ln),length(D_t));
+Thrust = zeros(length(eps),length(Ln),length(D_t));
+Mass = zeros(length(eps),length(Ln),length(D_t));
+Thrust_norm = zeros(length(eps),length(Ln),length(D_t));
+Mass_norm = zeros(length(eps),length(Ln),length(D_t));
+t = zeros(length(eps),length(Ln),length(D_t));
+g1 = zeros(length(eps),length(Ln),length(D_t));
+g2 = zeros(length(eps),length(Ln),length(D_t));
+g3 = zeros(length(eps),length(Ln),length(D_t));
+g4 = zeros(length(eps),length(Ln),length(D_t));
+g5 = zeros(length(eps),length(Ln),length(D_t));
+g6 = zeros(length(eps),length(Ln),length(D_t));
+g7 = zeros(length(eps),length(Ln),length(D_t));
 
 p_ratio = P_ratio_calculator(eps,Ln,D_t);
 
@@ -60,44 +61,38 @@ for k = 1:length(D_t)
 end
 
 %% Calculate Objective Function
-Thrust_norm = Thrust./(max(Thrust,[],"all"));
-Mass_norm = Mass./(max(Mass,[],"all"));
+
+Thrust_norm = Thrust./max(Thrust,[],"all");
+Mass_norm = Mass./max(Mass,[],"all");
+
 f_obj1 = Mass_norm-Thrust_norm;
 
-% %% Plots
-% figure()
-% contour(eps,Ln,f_obj1)
-% ylabel('Ln [m]')
-% xlabel('expansion ratio')
-% hold on
-% contour(eps,Ln,g1,[0 0],'r',LineWidth=2); %thickness max
-% hold on
-% contour(eps,Ln,g2,[0 0],'r--',LineWidth=2); %thickness min
-% hold on
-% contour(eps,Ln,g3,[0 0],'b',LineWidth=2); %alpha min
-% hold on
-% contour(eps,Ln,g4,[0 0],'b--',LineWidth=2); %alpha max 
-% hold on
-% contour(eps,Ln,g5,[0 0],'g',LineWidth=2); %reynolds
-% hold on
-% contour(eps,Ln,g6,[0 0],'k',LineWidth=2); %mass 
-% hold on
-% contour(eps,Ln,g7,[0 0],'k--',LineWidth=2); %thrust
-% grid on
+test = reshape(f_obj1(42,:,:),100,100);
+g1 = reshape(g1(42,:,:),100,100);
+g2 = reshape(g2(42,:,:),100,100);
+g3 = reshape(g3(42,:,:),100,100);
+g4 = reshape(g4(42,:,:),100,100);
+g5 = reshape(g5(42,:,:),100,100);
+g6 = reshape(g6(42,:,:),100,100);
+g7 = reshape(g7(42,:,:),100,100);
 
-%% optimization
-clc
-% Define the objective function
-objective = @(x) Objective_function(x,max(Thrust,[],"all"),max(Mass,[],"all"));
-
-% Define the initial guess
-x0 = [40, 0.8, 0.1];
-
-% Define the nonlinear constraint function
-nonlcon = @(x) constraints(x);
-
-% Define the optimization options
-options = optimoptions(@fmincon, 'Display', 'iter', 'Algorithm', 'sqp','FiniteDifferenceStepSize',0.0001,'TolX', 1e-3, 'TolCon', 1e-3);
-
-% Run the optimization
-[x_opt, f_opt, exitflag, output] = fmincon(objective, x0, [], [], [], [], [], [],nonlcon, options);
+%% Plots
+figure()
+contour(eps,Ln,test)
+ylabel('Ln [m]')
+xlabel('expansion ratio')
+hold on
+contour(eps,Ln,g1,[0 0],'r',LineWidth=2); %thickness max
+hold on
+contour(eps,Ln,g2,[0 0],'r--',LineWidth=2); %thickness min
+hold on
+contour(eps,Ln,g3,[0 0],'b',LineWidth=2); %alpha min
+hold on
+contour(eps,Ln,g4,[0 0],'b--',LineWidth=2); %alpha max 
+hold on
+contour(eps,Ln,g5,[0 0],'g',LineWidth=2); %reynolds
+hold on
+contour(eps,Ln,g6,[0 0],'k',LineWidth=2); %mass 
+hold on
+contour(eps,Ln,g7,[0 0],'k--',LineWidth=2); %thrust
+grid on

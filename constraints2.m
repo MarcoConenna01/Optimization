@@ -5,7 +5,7 @@ Ln = x(2);
 D_t = x(3);
 Parameters;
 
-[A_e, A_t, U_e, m_dot, alpha,p_c Thrust, Mass] = Thrust_Mass2(x);
+[A_e, A_t, U_e, m_dot, alpha,p_c, Thrust, Mass] = Thrust_Mass2(x);
 
 amin = 10*2*pi/360;
 amax = 25*2*pi/360;
@@ -42,6 +42,6 @@ g(6) = Mass/massmax-1;
 g(7) = 1-Thrust/thrustmin;
 
 %Equality constraints
-Ceq = 0.1-D_t;
+Ceq = D_t-0.1;
 
 end

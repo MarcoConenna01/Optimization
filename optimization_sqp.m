@@ -1,12 +1,12 @@
-clear variables
-clc
-load DATA.mat
+% clear variables
+% clc
+% load DATA.mat
 
 % Define the objective function
 objective = @(x) Objective_function2(x, max(Thrust,[],"all"), max(Mass,[],"all"));
 
 % Define the initial guess
-x0 = [30, 0.5, 0.5];
+x0 = [40, 0.8, 0.5];
 
 % Define the nonlinear constraint function
 nonlcon = @(x) constraints2(x);
