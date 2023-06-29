@@ -89,4 +89,4 @@ nonlcon = @(x) simp_constraints(x);
 options = optimoptions('fmincon', 'Display', 'iter', 'Algorithm', 'sqp', 'TolX', 1e-8, 'TolCon', 1e-8);
 
 % Run the optimization
-[x_opt, f_opt] = fmincon(objective, x0, [], [], [], [], [], [], nonlcon, options);
+[x_opt, f_opt, exitflag, output] = fmincon(objective, x0, [], [], [], [], [], [],nonlcon, options);
