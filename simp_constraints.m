@@ -42,6 +42,6 @@ g(6) = Mass/massmax-1;
 g(7) = 1-Thrust/thrustmin;
 
 %Equality constraints
-Ceq = [];
+Ceq = zeros(1,7);
 
 end
