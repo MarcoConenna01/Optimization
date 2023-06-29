@@ -43,27 +43,71 @@ min_df_dLn = min(abs(df_dLn),[],"all");
 
 [Ln_min_df_dLn, eps_min_df_dLn] = find(abs(df_dLn)==min_df_dLn);
 
-sottraz = abs(df_deps./df_dLn);
+ratio = abs(df_deps./df_dLn);
 
 figure()
 
-surf(sottraz)
+surf(ratio)
+
+% % Consider only the first 99x99 elements of f_obj1
+% f_obj1 = f_obj1(1:end-1, 1:end-1);
+% 
+% % Create a mask for values above 10
+% mask_yellow = ratio > 10;
+% 
+% % Create a mask for values below 0.1
+% mask_red = ratio < 0.1;
+% 
+% % Create a colormap for yellow, red, and green colors
+% cmap = [1 1 0; 1 0 0; 0 1 0];
+% 
+% % Initialize f_obj1_color with green color
+% f_obj1_color = zeros(size(f_obj1));
+% 
+% % Set yellow color for values above 10
+% f_obj1_color(mask_yellow) = 1;
+% 
+% % Set red color for values below 0.1
+% f_obj1_color(mask_red) = 2;
+% 
+% % Create the surface plot
+% figure
+% surf(f_obj1, f_obj1_color)
+% colormap(cmap)
+% colorbar
 
 % Consider only the first 99x99 elements of f_obj1
 f_obj1 = f_obj1(1:end-1, 1:end-1);
 
-% Create a mask based on sottraz values
-mask = sottraz < 10;
+% Create a mask for values above 10
+mask_yellow = ratio > 100;
 
-% Create a colormap for yellow and green colors
-cmap = [1 1 0; 0 1 0];
+% Create a mask for values below 0.1
+mask_red = ratio < 0.01;
 
-% Apply the mask to f_obj1 to assign colors
+% Create a colormap for yellow, red, and green colors
+cmap = [1 1 0; 1 0 0; 0 1 0];
+
+% Initialize f_obj1_color with green color
 f_obj1_color = zeros(size(f_obj1));
-f_obj1_color(mask) = 1;
 
-% Create the surface plot
+% Set yellow color for values above 10
+f_obj1_color(mask_yellow) = 1;
+
+% Set red color for values below 0.1
+f_obj1_color(mask_red) = 2;
+
+% Create the contour plot
 figure
-surf(f_obj1, f_obj1_color)
+contourf(eps(1:end-1),Ln(1:end-1),f_obj1)
 colormap(cmap)
 colorbar
+hold on
+
+% Overlay the colored regions
+[rows, cols] = find(f_obj1_color > 0);
+for i = 1:numel(rows)
+    plot(cols(i), rows(i), 'marker', '.', 'color', cmap(f_obj1_color(rows(i), cols(i)), :), 'markersize', 20)
+end
+
+hold off
