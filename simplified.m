@@ -90,3 +90,4 @@ options = optimoptions('fmincon', 'Display', 'iter', 'Algorithm', 'sqp', 'TolX',
 
 % Run the optimization
 [x_opt, f_opt, exitflag, output] = fmincon(objective, x0, [], [], [], [], [], [],nonlcon, options);
+scatter(x_opt(1),x_opt(2))
