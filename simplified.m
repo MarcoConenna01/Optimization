@@ -55,23 +55,23 @@ f_obj1 = Mass_norm-Thrust_norm;
 
 %% Plots
 figure()
-contour(Ln,eps,f_obj1)
-xlabel('Ln [m]')
-ylabel('expansion ratio')
+contour(eps,Ln,f_obj1)
+ylabel('Ln [m]')
+xlabel('expansion ratio')
 hold on
-contour(Ln,eps,g1,[0 0],'r',LineWidth=2); %thickness max
+contour(eps,Ln,g1,[0 0],'r',LineWidth=2); %thickness max
 hold on
-contour(Ln,eps,g2,[0 0],'r--',LineWidth=2); %thickness min
+contour(eps,Ln,g2,[0 0],'r--',LineWidth=2); %thickness min
 hold on
-contour(Ln,eps,g3,[0 0],'b',LineWidth=2); %alpha min
+contour(eps,Ln,g3,[0 0],'b',LineWidth=2); %alpha min
 hold on
-contour(Ln,eps,g4,[0 0],'b--',LineWidth=2); %alpha max 
+contour(eps,Ln,g4,[0 0],'b--',LineWidth=2); %alpha max 
 hold on
-contour(Ln,eps,g5,[0 0],'g',LineWidth=2); %reynolds
+contour(eps,Ln,g5,[0 0],'g',LineWidth=2); %reynolds
 hold on
-contour(Ln,eps,g6,[0 0],'k',LineWidth=2); %mass 
+contour(eps,Ln,g6,[0 0],'k',LineWidth=2); %mass 
 hold on
-contour(Ln,eps,g7,[0 0],'k--',LineWidth=2); %thrust
+contour(eps,Ln,g7,[0 0],'k--',LineWidth=2); %thrust
 grid on
 
 %% optimization

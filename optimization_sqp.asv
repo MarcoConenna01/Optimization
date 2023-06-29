@@ -16,10 +16,10 @@ x0 = [25, 0.5];
 nonlcon = @(x) simp_constraints(x);
 
 % Define the optimization options
-options = optimoptions('fmincon', 'Display', 'iter-detailed', 'Algorithm', 'sqp', 'TolX', 1e-18, 'TolCon', 1e-8);
+options = optimoptions('fmincon', 'Display', 'iter', 'Algorithm', 'interior', 'TolX', 1e-8, 'TolCon', 1e-8, 'OutputFcn', @displayFunc);
 
 % Run the optimization
-[x_opt, f_opt, exitflag, output] = fmincon( objective, x0, [], [], [], [], [], [],nonlcon, options);
+[x_opt, f_opt, exitflag, output] = fmincon(objective, x0, [], [], [], [], [], [],nonlcon, options);
 
 % Display function to show the value of x after each iteration
 function stop = displayFunc(x, optimValues, state)
