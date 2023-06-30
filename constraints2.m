@@ -14,6 +14,7 @@ ThickMax = Ln/100;
 ThickMin = 0.001;
 massmax = 80;
 thrustmin = 10000;
+D_tmax = 0.75*Dc;
 
 %thickness
 thick = p_c.*Dc/(4*sigma); %min thickness depends on sigma
@@ -40,6 +41,9 @@ g(6) = Mass/massmax-1;
 
 %thrust
 g(7) = 1-Thrust/thrustmin;
+
+%diameter
+g(8) = D_t/D_tmax-1;
 
 %Equality constraints
 Ceq = [];

@@ -1,6 +1,5 @@
-% %%Complex Model%%
-%design variables: wall thickness t, expansion ratio eps=Ae/At
-%constraints: ...
+%%%% COMPLEX MODEL %%%%
+
 
 clear variables
 close all
@@ -10,7 +9,7 @@ clc
 Parameters
 eps = linspace(1.01,50,100);
 Ln = linspace(Dc/2,1,100);
-D_t = linspace(0.01,0.75*Dc,100); %CONSTRAINT REYNOLDS 100000
+D_t = linspace(0.01,Dc,100); %CONSTRAINT REYNOLDS 100000
 
 %% Initializing Parameters
 p_c = zeros(length(eps),length(Ln),length(D_t));
@@ -23,8 +22,6 @@ tg_a = zeros(length(eps),length(Ln),length(D_t));
 alpha = zeros(length(eps),length(Ln),length(D_t));
 Thrust = zeros(length(eps),length(Ln),length(D_t));
 Mass = zeros(length(eps),length(Ln),length(D_t));
-Thrust_norm = zeros(length(eps),length(Ln),length(D_t));
-Mass_norm = zeros(length(eps),length(Ln),length(D_t));
 t = zeros(length(eps),length(Ln),length(D_t));
 g1 = zeros(length(eps),length(Ln),length(D_t));
 g2 = zeros(length(eps),length(Ln),length(D_t));
@@ -33,6 +30,8 @@ g4 = zeros(length(eps),length(Ln),length(D_t));
 g5 = zeros(length(eps),length(Ln),length(D_t));
 g6 = zeros(length(eps),length(Ln),length(D_t));
 g7 = zeros(length(eps),length(Ln),length(D_t));
+g8 = zeros(length(eps),length(Ln),length(D_t));
+
 
 p_ratio = P_ratio_calculator(eps,Ln,D_t);
 
@@ -56,12 +55,12 @@ for k = 1:length(D_t)
             g5(k,j,i) = g(5); %reynolds
             g6(k,j,i) = g(6); %mass 
             g7(k,j,i) = g(7); %thrust
+            g8(k,j,i) = g(8); %throat Diameter
         end
     end
 end
 
 %% Calculate Objective Function
-
 Thrust_norm = Thrust./max(Thrust,[],"all");
 Mass_norm = Mass./max(Mass,[],"all");
 
