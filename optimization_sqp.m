@@ -1,6 +1,6 @@
-% clear variables
-% clc
-% load DATA.mat
+clear variables
+clc
+load DATA.mat
 
 % Define the objective function
 objective = @(x) Objective_function2(x, max(Thrust,[],"all"), max(Mass,[],"all"));
