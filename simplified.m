@@ -9,8 +9,8 @@ clc
 
 %% Design Variables
 Parameters
-eps = linspace(1.01,50,100);
-Ln = linspace(Dc/2,1,100);
+eps = linspace(1.01,50,1000);
+Ln = linspace(Dc/2,1,1000);
 
 %% Initializing Parameters
 p_ratio = zeros(length(eps),length(Ln));
@@ -57,7 +57,7 @@ f_obj1 = Mass_norm-Thrust_norm;
 
 %% Plots
 figure()
-contour(eps,Ln,f_obj1,'k')
+contour(eps,Ln,f_obj1,50)
 ylabel('Ln [m]')
 xlabel('expansion ratio')
 hold on
@@ -79,7 +79,7 @@ contour(eps,Ln,g4,[0.05 0.05],'--b',LineWidth=1);
 hold on
 contour(eps,Ln,g5,[0 0],'m',LineWidth=1); %reynolds
 hold on
-contour(eps,Ln,g5,[0.05 0.05],'--m',LineWidth=1);
+contour(eps,Ln,g5,[0.09 0.09],'--m',LineWidth=1);
 hold on 
 contour(eps,Ln,g6,[0 0],'g',LineWidth=1); %mass 
 hold on
@@ -87,9 +87,8 @@ contour(eps,Ln,g6,[0.05 0.05],'--g',LineWidth=1);
 hold on
 contour(eps,Ln,g7,[0 0],'c',LineWidth=1); %thrust
 hold on
-contour(eps,Ln,g7,[0.05 0.05],'--c',LineWidth=1);
+contour(eps,Ln,g7,[0.09 0.09],'--c',LineWidth=1);
 grid on
-
 %% optimization
 clc
 % Define the objective function
@@ -102,7 +101,7 @@ x0 = [40, 0.8];
 nonlcon = @(x) simp_constraints(x);
 
 % Define the optimization options
-options = optimoptions(@fmincon, 'Display', 'iter', 'Algorithm', 'sqp','FiniteDifferenceStepSize',0.0001,'TolX', 1e-3, 'TolCon', 1e-3);
+options = optimoptions(@fmincon, 'Display', 'iter', 'Algorithm', 'sqp','TolX', 1e-3, 'TolCon', 1e-3);
 
 % Run the optimization
 [x_opt, f_opt, exitflag, output] = fmincon(objective, x0, [], [], [], [], [], [],nonlcon, options);
