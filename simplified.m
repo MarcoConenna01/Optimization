@@ -57,7 +57,7 @@ f_obj1 = Mass_norm-Thrust_norm;
 
 %% Plots
 figure()
-contour(eps,Ln,f_obj1,'k')
+contour(eps,Ln,f_obj1,50)
 ylabel('Ln [m]')
 xlabel('expansion ratio')
 hold on
@@ -79,7 +79,7 @@ contour(eps,Ln,g4,[0.05 0.05],'--b',LineWidth=1);
 hold on
 contour(eps,Ln,g5,[0 0],'m',LineWidth=1); %reynolds
 hold on
-contour(eps,Ln,g5,[0.05 0.05],'--m',LineWidth=1);
+contour(eps,Ln,g5,[0.09 0.09],'--m',LineWidth=1);
 hold on 
 contour(eps,Ln,g6,[0 0],'g',LineWidth=1); %mass 
 hold on
@@ -87,9 +87,8 @@ contour(eps,Ln,g6,[0.05 0.05],'--g',LineWidth=1);
 hold on
 contour(eps,Ln,g7,[0 0],'c',LineWidth=1); %thrust
 hold on
-contour(eps,Ln,g7,[0.05 0.05],'--c',LineWidth=1);
+contour(eps,Ln,g7,[0.09 0.09],'--c',LineWidth=1);
 grid on
-
 %% optimization
 clc
 % Define the objective function
