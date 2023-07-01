@@ -9,8 +9,8 @@ clc
 
 %% Design Variables
 Parameters
-eps = linspace(1.01,50,100);
-Ln = linspace(Dc/2,1,100);
+eps = linspace(1.01,50,1000);
+Ln = linspace(Dc/2,1,1000);
 
 %% Initializing Parameters
 p_ratio = zeros(length(eps),length(Ln));
@@ -101,7 +101,7 @@ x0 = [40, 0.8];
 nonlcon = @(x) simp_constraints(x);
 
 % Define the optimization options
-options = optimoptions(@fmincon, 'Display', 'iter', 'Algorithm', 'sqp','FiniteDifferenceStepSize',0.0001,'TolX', 1e-3, 'TolCon', 1e-3);
+options = optimoptions(@fmincon, 'Display', 'iter', 'Algorithm', 'sqp','TolX', 1e-3, 'TolCon', 1e-3);
 
 % Run the optimization
 [x_opt, f_opt, exitflag, output] = fmincon(objective, x0, [], [], [], [], [], [],nonlcon, options);

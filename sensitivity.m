@@ -21,9 +21,9 @@ for j = 1:(length(Ln)-1)
 
     for i = 1:(length(eps)-1)
         
-        df_deps(j,i) = ((f_obj1(j,i+1)-f_obj1(j,i))/(h_eps)); %*eps(i)/f_obj1(j,i);
+        df_deps(j,i) = ((f_obj1(j,i+1)-f_obj1(j,i))/(h_eps))*eps(i)/f_obj1(j,i);
 
-        df_dLn(j,i) = ((f_obj1(j+1,i)-f_obj1(j,i))/(h_Ln)); %*Ln(j)/f_obj1(j,i);
+        df_dLn(j,i) = ((f_obj1(j+1,i)-f_obj1(j,i))/(h_Ln))*Ln(j)/f_obj1(j,i);
     
     end
 
@@ -31,21 +31,21 @@ end
 
 toc;
 
-max_df_deps = max(abs(df_deps),[],"all");
-
-max_df_dLn = max(abs(df_dLn),[],"all");
-
-min_df_deps = min(abs(df_deps),[],"all");
-
-min_df_dLn = min(abs(df_dLn),[],"all");
-
-[Ln_max_df_deps, eps_max_df_deps] = find(abs(df_deps)==max_df_deps);
-
-[Ln_max_df_dLn, eps_max_df_dLn] = find(abs(df_dLn)==max_df_dLn);
-
-[Ln_min_df_deps, eps_min_df_deps] = find(abs(df_deps)==min_df_deps);
-
-[Ln_min_df_dLn, eps_min_df_dLn] = find(abs(df_dLn)==min_df_dLn);
+% max_df_deps = max(abs(df_deps),[],"all");
+% 
+% max_df_dLn = max(abs(df_dLn),[],"all");
+% 
+% min_df_deps = min(abs(df_deps),[],"all");
+% 
+% min_df_dLn = min(abs(df_dLn),[],"all");
+% 
+% [Ln_max_df_deps, eps_max_df_deps] = find(abs(df_deps)==max_df_deps);
+% 
+% [Ln_max_df_dLn, eps_max_df_dLn] = find(abs(df_dLn)==max_df_dLn);
+% 
+% [Ln_min_df_deps, eps_min_df_deps] = find(abs(df_deps)==min_df_deps);
+% 
+% [Ln_min_df_dLn, eps_min_df_dLn] = find(abs(df_dLn)==min_df_dLn);
 
 ratio = abs(df_deps./df_dLn);
 
@@ -158,7 +158,22 @@ legend_axes.Title.FontWeight = 'bold';
 legend_axes.Position = [0.8, 0.8, 0.1, 0.1];
 
 %%
+[J I V]=find(ratio>10)
+fill_red=[J I];
+[J_y I_y V_y]=find(ratio< 0.01)
+fill_yellow=[J_y I_y];
 
+for i=1:length(fill_red)
+    x_red(i)=eps(fill_red(i,2));
+    y_red(i)=Ln(fill_red(i,1));
+    
+end
+for i=1:length(fill_yellow)
+    x_yellow(i)=eps(fill_yellow(i,2));
+    y_yellow(i)=Ln(fill_yellow(i,1));
+end 
+YELLOW=[x_yellow; y_yellow]'
+RED=[x_red; y_red]'
 % % Consider only the first 99x99 elements of f_obj1
 % f_obj1 = f_obj1(1:end-1, 1:end-1);
 % 
@@ -187,37 +202,29 @@ legend_axes.Position = [0.8, 0.8, 0.1, 0.1];
 % colorbar
 
 % Consider only the first 99x99 elements of f_obj1
-f_obj1 = f_obj1(1:end-1, 1:end-1);
-
-% Create a mask for values above 10
-mask_yellow = ratio > 100;
-
-% Create a mask for values below 0.1
-mask_red = ratio < 0.01;
-
-% Create a colormap for yellow, red, and green colors
-cmap = [1 1 0; 1 0 0; 0 1 0];
-
-% Initialize f_obj1_color with green color
-f_obj1_color = zeros(size(f_obj1));
-
-% Set yellow color for values above 10
-f_obj1_color(mask_yellow) = 1;
-
-% Set red color for values below 0.1
-f_obj1_color(mask_red) = 2;
-
-% Create the contour plot
-figure
-contourf(eps(1:end-1),Ln(1:end-1),f_obj1)
-colormap(cmap)
-colorbar
+f_obj1 = f_obj1(1:99, 1:99);
+figure();
+contour(eps(1:99),Ln(1:99),f_obj1,100);
+xlabel('Expansion Ratio x_1')
+ylabel('Nozzle Length x_2')
 hold on
+% Plot a single yellow dot for the legend
+plot(YELLOW(1,1), YELLOW(1,2), 'o', 'MarkerFaceColor', 'y', 'MarkerEdgeColor', 'none');
 
-% Overlay the colored regions
-[rows, cols] = find(f_obj1_color > 0);
-for i = 1:numel(rows)
-    plot(cols(i), rows(i), 'marker', '.', 'color', cmap(f_obj1_color(rows(i), cols(i)), :), 'markersize', 20)
+% Plot a single red dot for the legend
+plot(RED(1,1), RED(1,2), 'o', 'MarkerFaceColor', 'r', 'MarkerEdgeColor', 'none');
+
+% Fill points specified by YELLOW matrix with yellow color
+for k = 1:size(YELLOW, 1)
+    x = YELLOW(k, 1);
+    y = YELLOW(k, 2);
+    plot(x, y, 'o', 'MarkerFaceColor', 'y', 'MarkerEdgeColor', 'none');
 end
 
-hold off
+% Fill points specified by RED matrix with red color
+for k = 1:size(RED, 1)
+    x = RED(k, 1);
+    y = RED(k, 2);
+    plot(x, y, 'o', 'MarkerFaceColor', 'r', 'MarkerEdgeColor', 'none');
+end
+legend('f obj', 'Ratio< 0.01', 'Ratio>100', 'Location', 'best');
