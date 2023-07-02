@@ -13,6 +13,10 @@ df_deps = zeros(length(eps)-1,length(Ln)-1);
 
 df_dLn = zeros(length(eps)-1,length(Ln)-1);
 
+log_deps=zeros(length(eps)-1,length(Ln)-1);
+
+log_dLn=zeros(length(eps)-1,length(Ln)-1);
+
 %FORWARD DIFFERENCES METHOD
 
 tic; 
@@ -21,8 +25,10 @@ for j = 1:(length(Ln)-1)
 
     for i = 1:(length(eps)-1)
         
-        df_deps(j,i) = ((f_obj1(j,i+1)-f_obj1(j,i))/(h_eps))*eps(i)/f_obj1(j,i);
-        df_dLn(j,i) = ((f_obj1(j+1,i)-f_obj1(j,i))/(h_Ln))*Ln(j)/f_obj1(j,i);
+        df_deps(j,i) = ((f_obj1(j,i+1)-f_obj1(j,i))/(h_eps)); 
+        log_deps(j,i)= df_deps(j,i)*eps(i)/f_obj1(j,i);
+        df_dLn(j,i) = ((f_obj1(j+1,i)-f_obj1(j,i))/(h_Ln));
+        log_dLn(j,i)= df_dLn(j,i)*Ln(i)/f_obj1(j,i);
     
     end
 
@@ -74,7 +80,7 @@ figure();
 for i=1:10:length(Ln)-2
 plot(eps(1:end-1),df_deps(i,:),'r', 'Linewidth',1.2)
 hold on
-plot(eps(2:end-1),df_deps_C(i,:),'b', 'Linewidth',1.2)
+%plot(eps(2:end-1),df_deps_C(i,:),'b', 'Linewidth',1.2)
 grid on
 title('Sensitivity df/dx_1')
 xlabel('x_1')
@@ -126,7 +132,7 @@ figure();
 for i=1:10:length(eps)-2
 plot(Ln(1:end-1),df_dLn(:,i),'r', 'Linewidth',1.2)
 hold on
-plot(Ln(2:end-1),df_dLn_C(:,i),'b', 'Linewidth',1.2)
+%plot(Ln(2:end-1),df_dLn_C(:,i),'b', 'Linewidth',1.2)
 grid on
 title('Sensitivity df/dx_2')
 xlabel('x_2')
@@ -173,76 +179,3 @@ legend_axes.Title.FontWeight = 'bold';
 
 % Adjust the legend box position and size as desired
 legend_axes.Position = [0.8, 0.8, 0.1, 0.1];
-
-%%
-[J I V]=find(ratio>10)
-fill_red=[J I];
-[J_y I_y V_y]=find(ratio<0.1)
-fill_yellow=[J_y I_y];
-close all;
-for i=1:length(fill_red)
-    x_red(i)=eps(fill_red(i,2));
-    y_red(i)=Ln(fill_red(i,1));
-    
-end
-for i=1:length(fill_yellow)
-    x_yellow(i)=eps(fill_yellow(i,2));
-    y_yellow(i)=Ln(fill_yellow(i,1));
-end 
-YELLOW=[x_yellow; y_yellow]';
-RED=[x_red; y_red]';
-% % Consider only the first 99x99 elements of f_obj1
-% f_obj1 = f_obj1(1:end-1, 1:end-1);
-% 
-% % Create a mask for values above 10
-% mask_yellow = ratio > 10;
-% 
-% % Create a mask for values below 0.1
-% mask_red = ratio < 0.1;
-% 
-% % Create a colormap for yellow, red, and green colors
-% cmap = [1 1 0; 1 0 0; 0 1 0];
-% 
-% % Initialize f_obj1_color with green color
-% f_obj1_color = zeros(size(f_obj1));
-% 
-% % Set yellow color for values above 10
-% f_obj1_color(mask_yellow) = 1;
-% 
-% % Set red color for values below 0.1
-% f_obj1_color(mask_red) = 2;
-% 
-% % Create the surface plot
-% figure
-% surf(f_obj1, f_obj1_color)
-% colormap(cmap)
-% colorbar
-
-% Consider only the first 99x99 elements of f_obj1
-% f_obj1 = f_obj1(1:99, 1:99);
-% figure();
-% contour(eps(1:99),Ln(1:99),f_obj1,100);
-% xlabel('Expansion Ratio x_1')
-% ylabel('Nozzle Length x_2')
-openfig figure.fig
-hold on
-% Plot a single yellow dot for the legend
-plot(YELLOW(1,1), YELLOW(1,2), 'o', 'MarkerFaceColor', 'y', 'MarkerEdgeColor', 'none');
-
-% Plot a single red dot for the legend
-plot(RED(1,1), RED(1,2), 'o', 'MarkerFaceColor', 'r', 'MarkerEdgeColor', 'none');
-
-% Fill points specified by YELLOW matrix with yellow color
-for k = 1:size(YELLOW, 1)
-    x = YELLOW(k, 1);
-    y = YELLOW(k, 2);
-    plot(x, y, 'o', 'MarkerFaceColor', 'y', 'MarkerEdgeColor', 'none');
-end
-
-% Fill points specified by RED matrix with red color
-for k = 1:size(RED, 1)
-    x = RED(k, 1);
-    y = RED(k, 2);
-    plot(x, y, 'o', 'MarkerFaceColor', 'r', 'MarkerEdgeColor', 'none');
-end
-legend('f obj', 'Ratio< 0.01', 'Ratio>100', 'Location', 'best');
