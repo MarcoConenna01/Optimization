@@ -22,16 +22,30 @@ for j = 1:(length(Ln)-1)
     for i = 1:(length(eps)-1)
         
         df_deps(j,i) = ((f_obj1(j,i+1)-f_obj1(j,i))/(h_eps))*eps(i)/f_obj1(j,i);
-d
         df_dLn(j,i) = ((f_obj1(j+1,i)-f_obj1(j,i))/(h_Ln))*Ln(j)/f_obj1(j,i);
     
     end
 
 end
 
+
 toc;
+df_deps_C=zeros(98,98);
+df_dLn_C=zeros(98,98);
+disp('Central differences')
+tic;
+for j = 2:(length(Ln)-1)
 
+    for i = 2:(length(eps)-1)
+        
+        df_deps_C(j-1,i-1) = ((f_obj1(j,i+1)-f_obj1(j,i-1))/(2*h_eps))*eps(i)/f_obj1(j,i);
 
+        df_dLn_C(j-1,i-1) = ((f_obj1(j+1,i)-f_obj1(j-1,i))/(2*h_Ln))*Ln(j)/f_obj1(j,i);
+        
+    end
+
+end
+toc;
 % max_df_deps = max(abs(df_deps),[],"all");
 % 
 % max_df_dLn = max(abs(df_dLn),[],"all");
@@ -57,9 +71,10 @@ surf(ratio)
 %% plots
 close all;
 figure();
-for i=1:10:length(Ln)-1
+for i=1:10:length(Ln)-2
 plot(eps(1:end-1),df_deps(i,:),'r', 'Linewidth',1.2)
 hold on
+plot(eps(2:end-1),df_deps_C(i,:),'b', 'Linewidth',1.2)
 grid on
 title('Sensitivity df/dx_1')
 xlabel('x_1')
@@ -108,9 +123,10 @@ legend_axes.Title.FontWeight = 'bold';
 legend_axes.Position = [0.8, 0.8, 0.1, 0.1];
 
 figure();
-for i=1:10:length(eps)-1
+for i=1:10:length(eps)-2
 plot(Ln(1:end-1),df_dLn(:,i),'r', 'Linewidth',1.2)
 hold on
+plot(Ln(2:end-1),df_dLn_C(:,i),'b', 'Linewidth',1.2)
 grid on
 title('Sensitivity df/dx_2')
 xlabel('x_2')
@@ -161,9 +177,9 @@ legend_axes.Position = [0.8, 0.8, 0.1, 0.1];
 %%
 [J I V]=find(ratio>10)
 fill_red=[J I];
-[J_y I_y V_y]=find(ratio< 0.01)
+[J_y I_y V_y]=find(ratio<0.1)
 fill_yellow=[J_y I_y];
-
+close all;
 for i=1:length(fill_red)
     x_red(i)=eps(fill_red(i,2));
     y_red(i)=Ln(fill_red(i,1));
@@ -173,8 +189,8 @@ for i=1:length(fill_yellow)
     x_yellow(i)=eps(fill_yellow(i,2));
     y_yellow(i)=Ln(fill_yellow(i,1));
 end 
-YELLOW=[x_yellow; y_yellow]'
-RED=[x_red; y_red]'
+YELLOW=[x_yellow; y_yellow]';
+RED=[x_red; y_red]';
 % % Consider only the first 99x99 elements of f_obj1
 % f_obj1 = f_obj1(1:end-1, 1:end-1);
 % 
@@ -203,11 +219,12 @@ RED=[x_red; y_red]'
 % colorbar
 
 % Consider only the first 99x99 elements of f_obj1
-f_obj1 = f_obj1(1:99, 1:99);
-figure();
-contour(eps(1:99),Ln(1:99),f_obj1,100);
-xlabel('Expansion Ratio x_1')
-ylabel('Nozzle Length x_2')
+% f_obj1 = f_obj1(1:99, 1:99);
+% figure();
+% contour(eps(1:99),Ln(1:99),f_obj1,100);
+% xlabel('Expansion Ratio x_1')
+% ylabel('Nozzle Length x_2')
+openfig figure.fig
 hold on
 % Plot a single yellow dot for the legend
 plot(YELLOW(1,1), YELLOW(1,2), 'o', 'MarkerFaceColor', 'y', 'MarkerEdgeColor', 'none');

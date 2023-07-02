@@ -1,6 +1,5 @@
 %% 
 figure()
-
 contour(eps,Ln,f_obj1,70); 
 ylabel('Ln (x_2)[m]')
 xlabel('Expansion ratio (x_1)')
@@ -199,11 +198,19 @@ hold on
 contour(eps,Ln,g6,[0 0],'g',LineWidth=1.5); %mass 
 hold on
 contour(eps,Ln,g6,[0.07 0.07],'--g',LineWidth=1.5);
+grid on
+colorbar
+cb = colorbar;
+title(cb, 'f obj');
+% Add legend
+legend('f obj', 'g2', '', 'g3', '', 'g4', '', 'g6', '', 'Location', 'best');
+
 % Extract the boundaries
 boundary1 = g2
 boundary2 = g3
 boundary3 = g4
 boundary4 = g6
+
 % Create a logical mask for the zone to fill
 zone_mask = boundary1 < 0 & boundary2 < 0 & boundary3 < 0 & boundary4 < 0;
 
@@ -216,13 +223,6 @@ zone_mask = boundary1 < 0 & boundary2 < 0 & boundary3 < 0 & boundary4 < 0;
 % Fill the zone
 [X Y]= meshgrid(eps,Ln)
 scatter(X(zone_mask), Y(zone_mask),'Marker', '.', 'MarkerEdgeColor', 'y');
-grid on
-colorbar
-cb = colorbar;
-title(cb, 'f obj');
-
-% Add legend
-legend('f obj', 'g2', '', 'g3', '', 'g4', '', 'g6', '', 'Location', 'best');
 
 % Set legend markers
 legend_markers = findobj(gcf, 'Type', 'Line');
@@ -233,7 +233,6 @@ legend_lines = findobj(legend_markers, 'Type', 'Line');
 delete(legend_lines);
 
 %% surf
-
 figure();
 surf(eps,Ln,f_obj1);
 xlabel('Expansion ratio (x_1)');
