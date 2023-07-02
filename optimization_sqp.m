@@ -17,6 +17,9 @@ tic
 % Run the optimization
 [x_opt, f_opt, exitflag, output, lambda, grad] = fmincon(objective, x0, [], [], [], [], [eps(1) Ln(1) D_t(1)], [eps(end) Ln(end) D_t(end)], nonlcon, options);
 toc
+
+figure();
+
 % Output function to print x after each iteration
 function stop = outputFunc(x,optimValues,state)
     stop = false;
