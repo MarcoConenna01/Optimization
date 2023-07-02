@@ -13,10 +13,10 @@ nonlcon = @(x) constraints2(x);
 
 % Define the optimization options
 options = optimoptions(@fmincon, 'Display', 'none', 'Algorithm', 'sqp', 'FiniteDifferenceStepSize', 0.01, 'StepTolerance', 1e-12, 'MaxFunctionEvaluations', 100000, 'OutputFcn', @outputFunc);
-
+tic
 % Run the optimization
-[x_opt, f_opt, exitflag, output] = fmincon(objective, x0, [], [], [], [], [eps(1) Ln(1) D_t(1)], [eps(end) Ln(end) D_t(end)], nonlcon, options);
-
+[x_opt, f_opt, exitflag, output, lambda, grad] = fmincon(objective, x0, [], [], [], [], [eps(1) Ln(1) D_t(1)], [eps(end) Ln(end) D_t(end)], nonlcon, options);
+toc
 % Output function to print x after each iteration
 function stop = outputFunc(x,optimValues,state)
     stop = false;
