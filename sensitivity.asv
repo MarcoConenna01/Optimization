@@ -31,21 +31,22 @@ end
 
 toc;
 
-max_df_deps = max(abs(df_deps),[],"all");
 
-max_df_dLn = max(abs(df_dLn),[],"all");
-
-min_df_deps = min(abs(df_deps),[],"all");
-
-min_df_dLn = min(abs(df_dLn),[],"all");
-
-[Ln_max_df_deps, eps_max_df_deps] = find(abs(df_deps)==max_df_deps);
-
-[Ln_max_df_dLn, eps_max_df_dLn] = find(abs(df_dLn)==max_df_dLn);
-
-[Ln_min_df_deps, eps_min_df_deps] = find(abs(df_deps)==min_df_deps);
-
-[Ln_min_df_dLn, eps_min_df_dLn] = find(abs(df_dLn)==min_df_dLn);
+% max_df_deps = max(abs(df_deps),[],"all");
+% 
+% max_df_dLn = max(abs(df_dLn),[],"all");
+% 
+% min_df_deps = min(abs(df_deps),[],"all");
+% 
+% min_df_dLn = min(abs(df_dLn),[],"all");
+% 
+% [Ln_max_df_deps, eps_max_df_deps] = find(abs(df_deps)==max_df_deps);
+% 
+% [Ln_max_df_dLn, eps_max_df_dLn] = find(abs(df_dLn)==max_df_dLn);
+% 
+% [Ln_min_df_deps, eps_min_df_deps] = find(abs(df_deps)==min_df_deps);
+% 
+% [Ln_min_df_dLn, eps_min_df_dLn] = find(abs(df_dLn)==min_df_dLn);
 
 ratio = abs(df_deps./df_dLn);
 
@@ -158,19 +159,19 @@ legend_axes.Title.FontWeight = 'bold';
 legend_axes.Position = [0.8, 0.8, 0.1, 0.1];
 
 %%
-[J I V]=find(ratio>100)
+[J I V]=find(ratio>10)
 fill_red=[J I];
 [J_y I_y V_y]=find(ratio< 0.01)
 fill_yellow=[J_y I_y];
 
-for i=1:95
-    x_red(i)=eps(fill_red(i,2))
-    y_red(i)=Ln(fill_red(i,1))
+for i=1:length(fill_red)
+    x_red(i)=eps(fill_red(i,2));
+    y_red(i)=Ln(fill_red(i,1));
     
 end
-for i=1:53
-    x_yellow(i)=eps(fill_yellow(i,2))
-    y_yellow(i)=Ln(fill_yellow(i,1))
+for i=1:length(fill_yellow)
+    x_yellow(i)=eps(fill_yellow(i,2));
+    y_yellow(i)=Ln(fill_yellow(i,1));
 end 
 YELLOW=[x_yellow; y_yellow]'
 RED=[x_red; y_red]'
@@ -203,15 +204,16 @@ RED=[x_red; y_red]'
 
 % Consider only the first 99x99 elements of f_obj1
 f_obj1 = f_obj1(1:99, 1:99);
+figure();
 contour(eps(1:99),Ln(1:99),f_obj1,100);
 xlabel('Expansion Ratio x_1')
 ylabel('Nozzle Length x_2')
 hold on
 % Plot a single yellow dot for the legend
-plot(0, 0, 'o', 'MarkerFaceColor', 'y', 'MarkerEdgeColor', 'none');
+plot(YELLOW(1,1), YELLOW(1,2), 'o', 'MarkerFaceColor', 'y', 'MarkerEdgeColor', 'none');
 
 % Plot a single red dot for the legend
-plot(0, 0, 'o', 'MarkerFaceColor', 'r', 'MarkerEdgeColor', 'none');
+plot(RED(1,1), RED(1,2), 'o', 'MarkerFaceColor', 'r', 'MarkerEdgeColor', 'none');
 
 % Fill points specified by YELLOW matrix with yellow color
 for k = 1:size(YELLOW, 1)
@@ -226,4 +228,4 @@ for k = 1:size(RED, 1)
     y = RED(k, 2);
     plot(x, y, 'o', 'MarkerFaceColor', 'r', 'MarkerEdgeColor', 'none');
 end
-legend('Contour', 'Fill Yellow', 'Fill Red', 'Location', 'best');
+legend('f obj', 'Ratio< 0.01', 'Ratio>100', 'Location', 'best');

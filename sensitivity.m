@@ -22,7 +22,7 @@ for j = 1:(length(Ln)-1)
     for i = 1:(length(eps)-1)
         
         df_deps(j,i) = ((f_obj1(j,i+1)-f_obj1(j,i))/(h_eps))*eps(i)/f_obj1(j,i);
-
+d
         df_dLn(j,i) = ((f_obj1(j+1,i)-f_obj1(j,i))/(h_Ln))*Ln(j)/f_obj1(j,i);
     
     end
@@ -30,6 +30,7 @@ for j = 1:(length(Ln)-1)
 end
 
 toc;
+
 
 % max_df_deps = max(abs(df_deps),[],"all");
 % 
